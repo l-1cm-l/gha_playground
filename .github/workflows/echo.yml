@@ -1,9 +1,6 @@
 name: Echo Workflow
 
-on:
-  push:
-    branches-ignore:
-      - master
+on: [push]
 
 jobs:
   echo_job:
