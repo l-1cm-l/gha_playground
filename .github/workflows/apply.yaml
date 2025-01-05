@@ -11,8 +11,8 @@ permissions:
   contents: read
 
 jobs:
-  test:
-    name: test
+  apply:
+    name: terraform-apply
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
