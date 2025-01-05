@@ -1,6 +1,9 @@
 name: terraform-plan
 
-on: [push]
+on:
+  push:
+    branches-ignore:
+      - master
 
 permissions:
   id-token: write
