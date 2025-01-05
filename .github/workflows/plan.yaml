@@ -1,4 +1,4 @@
-name: OIDC Actions
+name: terraform-plan
 
 on: [push]
 

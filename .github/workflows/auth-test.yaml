@@ -1,4 +1,4 @@
-name: OIDC Actions
+name: auth-test
 
 on: [push]
 
@@ -7,8 +7,8 @@ permissions:
   contents: read
 
 jobs:
-  test:
-    name: test
+  auth-test:
+    name:  auth-test
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
