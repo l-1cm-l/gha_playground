@@ -1,0 +1,29 @@
+name: OIDC Actions
+
+on: [push]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: "projects/1049987498512/locations/global/workloadIdentityPools/github-actions-pool/providers/github"
+          service_account: 'github-actions@dev-ss-444303.iam.gserviceaccount.com'
+     
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+         terraform_version: 1.10.3
+      - name: Terraform Init
+        run: terraform init 
+      - name: Terraform Plan
+        run: terraform plan
