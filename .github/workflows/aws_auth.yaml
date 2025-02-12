@@ -1,46 +1,40 @@
 name: aws-auth
-
 on:
   push:
     branches:
-      - master
-  workflow_dispatch:
-
-permissions:
-  id-token: write
-  contents: read
-
+      - "master"
+ 
 jobs:
-  auth:
+  aws-auth:
+    name: aws-auth
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+ 
     steps:
-      # Google Cloud認証を実行
-      - uses: google-github-actions/auth@v2
-        id: auth
-        with:
-          project_id: "dev-ss-444303"
-          workload_identity_provider:  ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ secrets.SERVICE_ACCOUNT }}
-          token_format: "id_token"
-          id_token_audience: "sts.amazonaws.com"
-      # 取得したトークンをファイルに保存
-      - name: Write JWT
-        run: |
-          import os
-
-          with open(os.environ["DESTINATION"], "w") as f:
-            f.write(os.environ["ID_TOKEN"])
-        shell: python
-        env:
-          DESTINATION: ${{runner.temp}}/token.txt
-          ID_TOKEN: ${{steps.auth.outputs.id_token}}
-      # AWS認証を実行
-      - uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-region: 'us-east-1'
-          mask-aws-account-id: true
-          role-to-assume: ${{secrets.AWS_IAM_ROLE}}
-          role-session-name: 'GitHubActions'
-          web-identity-token-file: ${{runner.temp}}/token.txt
-      # 認証確認
-      - run: aws sts get-caller-identity
+    - name: set ROLE
+      run: |
+        echo "AWS_ROLE_ARN=$" >> $GITHUB_ENV
+ 
+    - name: Checkout
+      uses: actions/checkout@v3
+ 
+    - name: configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: $
+        aws-region: ap-northeast-1
+ 
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: ~1.2.0
+ 
+    - name: Terraform Init
+      run: terraform init
+      working-directory: terraform
+ 
+    - name: Terraform plan
+      run: terraform plan
+      working-directory: terraform
