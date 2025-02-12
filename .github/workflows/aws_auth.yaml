@@ -2,7 +2,7 @@ name: aws-auth
 on:
   push:
     branches:
-      - "main"
+      - "master"
  
 jobs:
   aws-auth:
