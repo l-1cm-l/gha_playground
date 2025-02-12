@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   aws-terraform-plan:
-    name: Terraform Plan
+    name: 
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
