@@ -11,7 +11,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  aws-terraform-plan:
+  aws-googlecloud-terraform-plan:
     name: 
     runs-on: ubuntu-latest
     steps:
