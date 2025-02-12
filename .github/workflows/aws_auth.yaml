@@ -1,56 +1,58 @@
-name: aws-auth
-on:
-    push:
-      branches-ignore:
-        - master
-  
-  permissions:
-    id-token: write
-    contents: read
-    pull-requests: write
-    
-jobs:
-  aws-auth:
-    name: aws-auth
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
-    steps:
-    - name: Check out code
-      uses: actions/checkout@v3
+name: terraform-plan
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-        aws-region: ap-northeast-1
-        role-session-name: GitHubActionsSession
-        - name: Set up Terraform
+on:
+  push:
+    branches-ignore:
+      - master
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+jobs:
+  plan:
+    name: terraform-plan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ap-northeast-1
+          role-session-name: GitHubActionsSession
+
+      - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: 1.10.3
 
-    - name: setup tfcmt
-      env:
-        TFCMT_VERSION: v3.4.1
-      run: |
-        wget "https://github.com/suzuki-shunsuke/tfcmt/releases/download/${TFCMT_VERSION}/tfcmt_linux_amd64.tar.gz" -O /tmp/tfcmt.tar.gz
-        tar xzf /tmp/tfcmt.tar.gz -C /tmp
-        mv /tmp/tfcmt /usr/local/bin
-        tfcmt --version
-    - name: Terraform init
-      id: init
-      run: terraform init
+      - name: setup tfcmt
+        env:
+          TFCMT_VERSION: v3.4.1
+        run: |
+          wget "https://github.com/suzuki-shunsuke/tfcmt/releases/download/${TFCMT_VERSION}/tfcmt_linux_amd64.tar.gz" -O /tmp/tfcmt.tar.gz
+          tar xzf /tmp/tfcmt.tar.gz -C /tmp
+          mv /tmp/tfcmt /usr/local/bin
+          tfcmt --version
 
-    - name: Terraform fmt
-      id: fmt
-      run: terraform fmt -check
-    - name: Terraform validate
-      id: validate
-      run: terraform validate
-    - name: Terraform plan
-      id: plan
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: tfcmt plan -patch -- terraform plan -input=false
+      - name: Terraform init
+        id: init
+        run: terraform init
+   
+      - name: Terraform fmt
+        id: fmt
+        run: terraform fmt -check
+
+      - name: Terraform validate
+        id: validate
+        run: terraform validate
+
+      - name: Terraform plan
+        id: plan
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: tfcmt plan -patch -- terraform plan -input=false
