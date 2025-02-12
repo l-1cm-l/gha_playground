@@ -1,12 +1,9 @@
 name: aws-terraform-plan
 
 on:
-    workflow_run:
-      workflows: ["terraform-plan"]
+    push:
       branches-ignore:
         - master
-      types:
-        - completed
 
 permissions:
   id-token: write
