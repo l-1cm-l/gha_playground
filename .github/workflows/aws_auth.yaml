@@ -3,7 +3,8 @@ name: aws-terraform-plan
 on:
     workflow_run:
       workflows: ["terraform-plan"]
-      branches-ignore: [master]
+      branches-ignore:
+        - master
       types:
         - completed
 
