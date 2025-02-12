@@ -1,4 +1,4 @@
-name: aws-terraform-plan
+name: terraform-plan
 
 on:
     push:
@@ -11,7 +11,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  aws-terraform-plan:
+  aws-googlecloud-terraform-plan:
     name: 
     runs-on: ubuntu-latest
     steps:
@@ -54,7 +54,7 @@ jobs:
       - name: Terraform init
         id: init
         run: terraform init
-   
+  
       - name: Terraform fmt
         id: fmt
         run: terraform fmt -check
