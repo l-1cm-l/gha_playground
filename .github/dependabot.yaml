@@ -1,6 +1,17 @@
 version: 2
 updates:
   - package-ecosystem: terraform
-    directory: "/"  # ルートディレクトリ、Terraform の設定ファイルがある場所に合わせて変更してください
+    directory: /
     schedule:
       interval: daily
+    open-pull-requests-limit: 2
+    target-branch: master
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 2
+    target-branch: master
