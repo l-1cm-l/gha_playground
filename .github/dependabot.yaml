@@ -1,0 +1,6 @@
+version: 2
+updates:
+  - package-ecosystem: terraform
+    directory: "/"  # ルートディレクトリ、Terraform の設定ファイルがある場所に合わせて変更してください
+    schedule:
+      interval: daily
