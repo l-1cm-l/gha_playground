@@ -4,6 +4,10 @@ on:
   pull_request:
     types: [opened]
 
+permissions:
+  pull-requests: write
+  issues: write
+
 jobs:
   auto-labeling-pr:
     runs-on: ubuntu-latest
@@ -15,7 +19,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # ラベル名を取得する
       - name: Get label name
         id: label_name
         run: |
@@ -27,11 +30,10 @@ jobs:
           elif [ $branch_type == 'hotfix' ]; then
             label_name="hotfix"
           else
-            label_name=""
+            label_name="unknown"
           fi
           echo "label_name=$label_name" >> $GITHUB_OUTPUT
 
-      # PRにラベルを付与する
       - name: Auto labeling
         if: ${{ steps.label_name.outputs.label_name != '' }}
         run: |
