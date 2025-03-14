@@ -97,4 +97,4 @@ jobs:
           terraform_version: "1.10.3"
       
       - name: Terraform Apply
-        run: terraform apply -auto-approve saved_plan
+        run: terraform apply -auto-approve
