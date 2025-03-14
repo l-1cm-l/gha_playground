@@ -14,9 +14,6 @@ jobs:
   plan:
     name: Terraform Plan
     runs-on: ubuntu-latest
-    # plan ジョブの出力を定義
-    outputs:
-      changes: ${{ steps.plan.outputs.changes }}
     steps:
       - name: Check out code
         uses: actions/checkout@v4
@@ -51,29 +48,7 @@ jobs:
       
       - name: Terraform Plan
         id: plan
-        shell: bash
-        run: |
-          # 終了コードを確実に取得するため、一時ファイルを使用
-          terraform plan -detailed-exitcode -out saved_plan; echo $? > exit_code.txt
-          PLAN_EXIT_CODE=$(cat exit_code.txt)
-          
-          echo "Plan exit code: $PLAN_EXIT_CODE"
-          
-          # 終了コードに基づいて処理を分岐
-          if [ "$PLAN_EXIT_CODE" = "2" ]; then
-            echo "Changes detected in plan."
-            echo "changes=true" >> "$GITHUB_OUTPUT"
-          elif [ "$PLAN_EXIT_CODE" = "0" ]; then
-            echo "No changes. Infrastructure is up-to-date."
-            echo "changes=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "Terraform plan failed with exit code: $PLAN_EXIT_CODE"
-            exit 1
-          fi
-          
-          # デバッグ用の出力
-          echo "GITHUB_OUTPUT content after setting:"
-          cat "$GITHUB_OUTPUT"
+        run: terraform plan -out saved_plan
       
       - name: Upload saved plan
         uses: actions/upload-artifact@v4.6.1
@@ -84,7 +59,6 @@ jobs:
   apply:
     name: Terraform Apply
     needs: plan
-    if: needs.plan.outputs.changes == 'true'
     environment: production
     runs-on: ubuntu-latest
     steps:
@@ -125,4 +99,4 @@ jobs:
         run: terraform init
       
       - name: Terraform Apply
-        run: terraform apply -auto-approve saved_plan
+        run: terraform apply -auto-approve
