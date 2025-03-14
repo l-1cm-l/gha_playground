@@ -51,7 +51,7 @@ jobs:
         run: terraform plan -out saved_plan
       
       - name: Upload saved plan
-        uses: actions/upload-artifact@v3.1.2
+        uses: actions/upload-artifact@v4.6.1
         with:
           name: saved_plan
           path: saved_plan
@@ -64,7 +64,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download saved plan
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.9
         with:
           name: saved_plan
 
