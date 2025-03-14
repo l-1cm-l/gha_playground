@@ -52,15 +52,16 @@ jobs:
       - name: Terraform Plan
         id: plan
         run: |
-          # デバッグ出力を追加
-          set -x
+          # set -e を一時的に無効化
+          set +e
           
           terraform plan -detailed-exitcode -out saved_plan
           plan_exit_code=$?
           
+          set -e
+          
           echo "Plan exit code: $plan_exit_code"
           
-          # 終了コードに基づいて処理を分岐
           if [ $plan_exit_code -eq 0 ]; then
             echo "No changes. Infrastructure is up-to-date."
             echo "changes=false" >> $GITHUB_OUTPUT
