@@ -52,23 +52,24 @@ jobs:
       - name: Terraform Plan
         id: plan
         run: |
-          # plan を実行し結果を変数に格納
-          PLAN_OUTPUT=$(terraform plan -detailed-exitcode -out saved_plan 2>&1)
+          # Terraform planを実行し、出力を表示
+          terraform plan -detailed-exitcode -out saved_plan || exit_code=$?
           
-          # 終了コードを保存
-          EXITCODE=$?
-          
-          # 終了コードに基づいて変更の有無を判定
-          # 0 = 変更なし
-          # 1 = エラー
-          # 2 = 変更あり
-          if [ $EXITCODE -eq 0 ]; then
-            echo "changes=false" >> $GITHUB_OUTPUT
-          elif [ $EXITCODE -eq 2 ]; then
-            echo "changes=true" >> $GITHUB_OUTPUT
-          else
-            exit $EXITCODE
-          fi
+          # exit_codeの値に基づいて処理を分岐
+          case ${exit_code:-0} in
+            0)
+              echo "No changes. Infrastructure is up-to-date."
+              echo "changes=false" >> $GITHUB_OUTPUT
+              ;;
+            1)
+              echo "Terraform plan failed."
+              exit 1
+              ;;
+            2)
+              echo "Changes detected in plan."
+              echo "changes=true" >> $GITHUB_OUTPUT
+              ;;
+          esac
       
       - name: Upload saved plan
         uses: actions/upload-artifact@v4.6.1
@@ -79,9 +80,7 @@ jobs:
   apply:
     name: Terraform Apply
     needs: plan
-    # 変更がある場合のみ実行
     if: needs.plan.outputs.changes == 'true'
-    # production 環境の保護ルールにより、apply ジョブ実行前に承認が必要になります
     environment: production
     runs-on: ubuntu-latest
     steps:
@@ -122,4 +121,4 @@ jobs:
         run: terraform init
       
       - name: Terraform Apply
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve saved_plan
