@@ -52,6 +52,9 @@ jobs:
       - name: Terraform Plan
         id: plan
         run: |
+          # デバッグ出力を追加
+          set -x
+          
           terraform plan -detailed-exitcode -out saved_plan
           plan_exit_code=$?
           
@@ -68,6 +71,9 @@ jobs:
             echo "Terraform plan failed."
             exit 1
           fi
+          
+          # デバッグ用：outputs の内容を確認
+          echo "Output value: $(cat $GITHUB_OUTPUT)"
       
       - name: Upload saved plan
         uses: actions/upload-artifact@v4.6.1
