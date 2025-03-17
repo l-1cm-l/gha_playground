@@ -6,7 +6,3 @@ provider "google" {
 provider "aws" {
   region = "ap-northeast-1"
 }
-
-locals {
-  project_id = "dev-ss-444303"
-}
