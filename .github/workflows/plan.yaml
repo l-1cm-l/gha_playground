@@ -63,6 +63,15 @@ jobs:
         id: validate
         run: terraform validate
 
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v3
+        with:
+          tflint_version: v0.47.0
+      - name: TFLint init
+        run: tflint --init
+      - name: Run TFLint
+        run: tflint --recursive --config $(pwd)/.tflint.hcl --format compact
+
       - name: Terraform plan
         id: plan
         env:
