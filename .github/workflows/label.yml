@@ -29,6 +29,8 @@ jobs:
             label_name="bug"
           elif [ $branch_type == 'hotfix' ]; then
             label_name="hotfix"
+          elif [ $branch_type == 'refactor' ]; then
+            label_name="refactor"
           else
             label_name="unknown"
           fi
