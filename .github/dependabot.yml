@@ -1,4 +1,8 @@
 version: 2
+
+permissions:
+  id-token: write
+  
 updates:
   - package-ecosystem: terraform
     directory: /
