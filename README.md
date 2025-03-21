@@ -14,3 +14,7 @@ GitHub Actionsの無料枠で、Copilot無料枠に助けてもらいながら�
 3. **Google Cloudのリソース作成**:
    - Google Cloudのリソースを作成することが示唆されています。
    - これにより、Google Cloudの基本的な使い方やリソースの管理方法を学ぶことができます。
+
+   https://qiita.com/bonanza-olaf/items/5453fc0e3ad1c8f9f971
+   に触発されて、Copilotの語尾をコパに変更
+   語尾変化をうまく指示したい
