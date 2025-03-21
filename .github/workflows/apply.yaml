@@ -11,72 +11,21 @@ permissions:
   contents: read
 
 jobs:
-  plan:
-    name: Terraform Plan
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v4
-      
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          aws-region: ap-northeast-1
-          role-session-name: GitHubActionsSession
-      
-      - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v2
-        with:
-          workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ secrets.SERVICE_ACCOUNT }}
-          create_credentials_file: true
-          export_environment_variables: true
-          universe: googleapis.com
-          cleanup_credentials: true
-          access_token_lifetime: 3600s
-          access_token_scopes: https://www.googleapis.com/auth/cloud-platform
-          id_token_include_email: false
-      
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: "1.11.2"
-      
-      - name: Terraform Init
-        run: terraform init
-      
-      - name: Terraform Plan
-        id: plan
-        run: terraform plan -out saved_plan
-      
-      - name: Upload saved plan
-        uses: actions/upload-artifact@v4.6.2
-        with:
-          name: saved_plan
-          path: saved_plan
-
   apply:
     name: Terraform Apply
-    needs: plan
     environment: production
     runs-on: ubuntu-latest
     steps:
-      - name: Download saved plan
-        uses: actions/download-artifact@v4.2.1
-        with:
-          name: saved_plan
-
       - name: Check out code
         uses: actions/checkout@v4
-      
+    
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ap-northeast-1
           role-session-name: GitHubActionsSession
-      
+    
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
@@ -89,14 +38,14 @@ jobs:
           access_token_lifetime: 3600s
           access_token_scopes: https://www.googleapis.com/auth/cloud-platform
           id_token_include_email: false
-      
+    
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: "1.11.2"
-          
+        
       - name: Terraform Init
         run: terraform init
-      
+    
       - name: Terraform Apply
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approv
