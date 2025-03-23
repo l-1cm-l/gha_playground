@@ -12,9 +12,8 @@ permissions:
 
 jobs:
   plan:
-     name: Terraform plan
+    name: Terraform plan
     environment: development
-    name: 
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
