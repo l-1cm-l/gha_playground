@@ -77,10 +77,6 @@ jobs:
         run: tflint --init
       - name: Run TFLint
         run: tflint --recursive --config $(pwd)/.tflint.hcl --format compact
-      
-      - name: Force Unlock Terraform State
-        run: terraform force-unlock -force "1742742448017865"
-        if: steps.init.outcome == 'success' || steps.init.outcome == 'failure' # init ステップが成功または失敗した場合に実行
 
       - name: Terraform plan
         id: plan
