@@ -11,8 +11,9 @@ permissions:
   pull-requests: write
 
 jobs:
-  aws-googlecloud-terraform-plan:
-    name: 
+  plan:
+    name: Terraform plan
+    environment: development
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
