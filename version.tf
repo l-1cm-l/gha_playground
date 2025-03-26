@@ -13,5 +13,5 @@ terraform {
       version = "~> 4.24"
     }
   }
-  required_version = "1.10.3"
+  required_version = "1.10.3" # aztfexport v0.17.1 では 1.10.3 が必要
 }
