@@ -9,7 +9,7 @@ resource "azurerm_resource_group" "rg" {
   location = local.azure_japan_east
 }
 
-# resource "azurerm_resource_group" "networkwatcherrg" {
-#   name     = "NetworkWatcherRG"
-#   location = local.azure_japan_east
-# }
+resource "azurerm_resource_group" "networkwatcherrg" {
+  name     = "NetworkWatcherRG"
+  location = local.azure_japan_east
+}
