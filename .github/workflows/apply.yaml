@@ -21,6 +21,15 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4
             
+      - name: Restore Terraform cache
+        id: terraform-cache
+        uses: actions/cache@v3
+        with:
+          path: .terraform
+          key: ${{ runner.os }}-terraform-${hashFiles('**/terraform.lock.hcl')}
+          restore-keys: |
+            ${{ runner.os }}-terraform-
+
       - name: Azure Login
         uses: azure/login@v2
         with:
@@ -53,16 +62,9 @@ jobs:
         with:
           terraform_version: "1.10.3"
 
-      - name: Cache Terraform dependencies
-        uses: actions/cache@v3
-        with:
-          path: .terraform
-          key: ${{ runner.os }}-terraform-${hashFiles('**/terraform.lock.hcl')}
-          restore-keys: |
-            ${{ runner.os }}-terraform-
-        
       - name: Terraform Init
-        run: terraform init
+        id: init
+        run: terraform init -upgrade=true
     
       - name: Terraform Apply
         run: terraform apply -auto-approve
