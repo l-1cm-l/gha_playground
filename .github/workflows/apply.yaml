@@ -58,7 +58,6 @@ jobs:
           id_token_include_email: false
     
       - name: Set up Terraform
-        if: steps.terraform-cache.outputs.cache-hit != 'true'
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: "1.10.3"
