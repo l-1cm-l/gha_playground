@@ -50,6 +50,14 @@ jobs:
         with:
           terraform_version: "1.10.3"
 
+      - name: Cache Terraform dependencies
+        uses: actions/cache@v3
+        with:
+          path: .terraform
+          key: ${{ runner.os }}-terraform-${hashFiles('**/terraform.lock.hcl')}
+          restore-keys: |
+            ${{ runner.os }}-terraform-
+
       - name: setup tfcmt
         env:
           TFCMT_VERSION: v3.4.1
@@ -75,6 +83,14 @@ jobs:
         uses: terraform-linters/setup-tflint@v4
         with:
           tflint_version: v0.47.0
+
+      - name: Cache TFLint
+        id: cache-tflint
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.setup-tflint.outputs.tflint_path }}
+          key: ${{ runner.os }}-tflint-${{ steps.setup-tflint.outputs.tflint_version }}
+
       - name: TFLint init
         run: tflint --init
       - name: Run TFLint

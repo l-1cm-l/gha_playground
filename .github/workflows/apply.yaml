@@ -52,6 +52,14 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: "1.10.3"
+
+      - name: Cache Terraform dependencies
+        uses: actions/cache@v3
+        with:
+          path: .terraform
+          key: ${{ runner.os }}-terraform-${hashFiles('**/terraform.lock.hcl')}
+          restore-keys: |
+            ${{ runner.os }}-terraform-
         
       - name: Terraform Init
         run: terraform init
