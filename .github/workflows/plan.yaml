@@ -71,6 +71,19 @@ jobs:
         id: validate
         run: terraform validate
 
+      - name: Random Failure
+        id: random_failure
+        run: |
+          set +e
+          RANDOM_NUMBER=$((RANDOM % 5))
+          echo "Random number: $RANDOM_NUMBER"
+          if [ "$RANDOM_NUMBER" -eq 0 ]; then
+            echo "Simulating a failure..."
+            exit 1
+          else
+            echo "Continuing..."
+          fi
+
       - name: Setup TFLint
         uses: terraform-linters/setup-tflint@v4
         with:
