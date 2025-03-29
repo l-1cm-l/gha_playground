@@ -20,16 +20,6 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v4
-
-      - name: Restore Terraform cache
-        id: terraform-cache
-        uses: actions/cache@v3
-        with:
-          path: .terraform
-          key: ${{ runner.os }}-terraform-${hashFiles('**/terraform.lock.hcl')}
-          restore-keys: |
-            ${{ runner.os }}-terraform-
-
       - name: Azure Login
         uses: azure/login@v2
         with:
@@ -71,7 +61,7 @@ jobs:
 
       - name: Terraform init
         id: init
-        run: terraform init -upgrade=true
+        run: terraform init
   
       - name: Terraform fmt
         id: fmt
@@ -81,22 +71,10 @@ jobs:
         id: validate
         run: terraform validate
 
-      - name: Restore TFLint cache
-        id: cache-tflint
-        uses: actions/cache@v3
-        with:
-          path: ${{ steps.setup-tflint.outputs.tflint_path }}
-          key: ${{ runner.os }}-tflint-${{ steps.setup-tflint.outputs.tflint_version }}
-          restore-keys: |
-            ${{ runner.os }}-tflint-
-
       - name: Setup TFLint
-        if: steps.cache-tflint.outputs.cache-hit != 'true'
         uses: terraform-linters/setup-tflint@v4
-        id: setup-tflint
         with:
           tflint_version: v0.47.0
-
       - name: TFLint init
         run: tflint --init
       - name: Run TFLint
