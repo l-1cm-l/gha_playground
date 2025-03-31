@@ -9,7 +9,7 @@ resource "azurerm_resource_group" "rg" {
   location = local.azure_japan_east
 }
 
-resource "azurerm_resource_group" "main" {
-  name     = "main"
+resource "azurerm_resource_group" "test_rg" {
+  name     = "test_rg"
   location = local.azure_japan_east
 }
