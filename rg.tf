@@ -13,3 +13,8 @@ resource "azurerm_resource_group" "main" {
   name     = "main"
   location = local.azure_japan_east
 }
+
+resource "azurerm_resource_group" "main_ex" {
+  name     = "main-ex"
+  location = local.azure_japan_east
+}
