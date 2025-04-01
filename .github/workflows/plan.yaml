@@ -17,6 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      TF_VERSION: "1.10.3"
     steps:
       - name: Check out code
         uses: actions/checkout@v4
@@ -48,7 +49,7 @@ jobs:
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: "1.10.3"
+          terraform_version: ${{ env.TF_VERSION }}
 
       - name: setup tfcmt
         env:
